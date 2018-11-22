@@ -1,0 +1,20 @@
+Configuration:
+  status: error
+  monitorInterval: 30
+  Appenders:
+    Console:
+      name: Console
+      target: SYSTEM_OUT
+      PatternLayout:
+        Pattern: "%d{HH:mm:ss.sss}{UTC} %p %l %m %n"
+  Loggers:
+    Root:
+      level: info
+      AppenderRef:
+      - ref: Console
+    Logger:
+      name: com.rev.test
+      level: debug
+      additivity: false
+      AppenderRef:
+      - ref: Console

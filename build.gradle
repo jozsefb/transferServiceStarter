@@ -1,0 +1,59 @@
+plugins {
+    id 'java'
+    id 'application'
+    id 'com.github.johnrengelman.shadow' version '2.0.4'
+}
+
+group 'com.rev.test'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+mainClassName = 'com.rev.test.transfers.Runner'
+
+repositories {
+    mavenCentral()
+}
+
+ext {
+    vertxVersion   = '3.5.3'
+    guiceVersion   = '4.2.0'
+}
+
+dependencies {
+    //vertx modules
+    compile "io.vertx:vertx-core:$vertxVersion"
+    compile "io.vertx:vertx-web:$vertxVersion"
+    compile "io.vertx:vertx-service-discovery:$vertxVersion"
+    compile "io.vertx:vertx-rx-java2:$vertxVersion"
+    compile "io.vertx:vertx-sync:$vertxVersion"
+    compile "com.google.inject:guice:$guiceVersion"
+
+    //logging
+    compile 'org.apache.logging.log4j:log4j-api'
+    compile 'org.apache.logging.log4j:log4j-core'
+    compile 'org.apache.logging.log4j:log4j-slf4j-impl:2.11.0'
+    compile 'org.slf4j:slf4j-api:1.7.25'
+    compile 'com.lmax:disruptor:3.4.2'
+
+    //json
+    compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-yaml', version: '2.9.6'
+    compile group: 'com.fasterxml.jackson.datatype', name: 'jackson-datatype-jsr310', version: '2.9.7'
+
+    //lombok
+    compileOnly 'org.projectlombok:lombok:1.18.2'
+    annotationProcessor 'org.projectlombok:lombok:1.18.2'
+    //testing
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+    testCompile "io.vertx:vertx-unit:$vertxVersion"
+    testCompile group: 'io.rest-assured', name: 'rest-assured', version: '3.2.0'
+}
+
+shadowJar {
+    classifier = 'fat'
+    manifest {
+        attributes 'Main-Verticle': 'com.rev.test.transfers.verticles.MainVerticle'
+    }
+    mergeServiceFiles {
+        include 'META-INF/services/io.vertx.core.spi.VerticleFactory'
+    }
+}
